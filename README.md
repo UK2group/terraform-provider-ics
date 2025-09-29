@@ -99,13 +99,11 @@ Provisions a bare metal server with automatic validation.
 
 ```hcl
 resource "ics_bare_metal_server" "example" {
-  instance_type    = "c1i.small"    # Instance type
+  instance_type    = "c1.small"    # Instance type
   location         = "NYC1"         # Location code
   operating_system = "Ubuntu 24.04" # Operating system
   hostname         = "my-server"
-  domain           = "example.com"
   friendly_name    = "My Test Server"
-  notes           = "Provisioned via Terraform"
 }
 ```
 
@@ -115,41 +113,10 @@ The provider automatically:
 - Confirms the operating system is available for that instance type and location
 - Provides helpful error messages with alternatives if anything is invalid
 
-## API Workflow
 
-The provider implements the following workflow for server provisioning:
+## Contributing
 
-1. **Resolve**: Look up SKU ID from friendly server type name and location code
-2. **Validate**: Check auto-provision inventory availability for the location
-3. **Discover**: Retrieve available operating systems for the server type and location
-4. **Order**: POST to `/rest-api/server-orders/order` with resolved configuration and OS product code
-5. **Poll**: GET `/rest-api/servers` repeatedly (every 30 seconds for up to 30 minutes)
-6. **Complete**: When the server appears in the servers list, provisioning is complete
-
-For server destruction:
-- **Cancel**: DELETE `/rest-api/servers/{server_id}/cancel` (automatically supported since we use hourly billing)
-
-## Key Improvements
-
-- **User-Friendly**: No need to look up SKU IDs manually - just use friendly names like `c1i.small`
-- **Location-Aware**: Automatically validates inventory availability in specified locations
-- **OS Discovery**: Dynamically discovers available operating systems instead of hardcoding
-- **Simplified Billing**: Always uses hourly billing for consistent, automated cleanup
-- **Auto-Validation**: Ensures servers can only be provisioned where inventory is available
-
-## Development
-
-### Building
-
-```bash
-go build -o terraform-provider-ics
-```
-
-### Testing
-
-```bash
-go test ./...
-```
+Interested in contributing? See our [Contributing Guide](CONTRIBUTING.md) for development setup, testing, and guidelines.
 
 ## Example
 
