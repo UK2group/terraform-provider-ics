@@ -14,9 +14,7 @@ The ICS (Ingenuity Cloud Services) provider allows you to manage bare metal serv
 - **Ultra-Simple Interface**: Just specify `instance_type`, `location`, and `operating_system` - the provider handles everything else
 - **Automatic Validation**: Real-time validation with helpful error messages showing available alternatives
 - **Zero Discovery Required**: No need for data sources or complex lookups - just specify what you want
-- **Comprehensive Error Messages**: Clear guidance when combinations aren't available
-- **Automatic Provisioning**: Polls for up to 30 minutes waiting for server provisioning to complete
-- **Simplified Billing**: Automatically uses hourly billing for easy cleanup and testing
+- **Automatic Provisioning**: Waits for up to 30 minutes waiting for server provisioning to complete
 - **Optional Data Sources**: Available for discovery if needed, but not required for basic usage
 
 ## Example Usage
