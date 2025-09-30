@@ -1,7 +1,7 @@
 terraform {
   required_providers {
     ics = {
-      source  = "UK2Group/ics"
+      source  = "UK2Group/ingenuitycloudservices"
       version = "~> 1.0"
     }
   }
