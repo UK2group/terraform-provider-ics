@@ -10,6 +10,5 @@ output "ssh_key_info" {
   value = {
     id          = ics_ssh_key.example.id
     label       = ics_ssh_key.example.label
-    fingerprint = ics_ssh_key.example.fingerprint
   }
 }
