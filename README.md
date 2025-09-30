@@ -20,7 +20,7 @@ This Terraform provider allows you to manage bare metal servers on Ingenuity Clo
 terraform {
   required_providers {
     ics = {
-      source = "UK2Group/ics"
+      source = "UK2Group/ingenuitycloudservices"
     }
   }
 }

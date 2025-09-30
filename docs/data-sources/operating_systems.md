@@ -1,5 +1,5 @@
 ---
-page_title: "ics_operating_systems Data Source - ICS"
+page_title: "ics_operating_systems Data Source - ingenuitycloudservices"
 subcategory: ""
 description: |-
   Retrieves available operating systems for a specific server type and location.
@@ -7,18 +7,42 @@ description: |-
 
 # ics_operating_systems (Data Source)
 
-Retrieves available operating systems for a specific server type and location combination.
+Retrieves available operating systems for a specific server type and location combination. This data source is useful for discovering which operating systems can be used when provisioning a bare metal server.
 
 ## Example Usage
 
 ```terraform
 data "ics_operating_systems" "example" {
-  server_type_name = "c1i.small"
+  server_type_name = "c1.small"
   location         = "NYC1"
 }
 
 output "available_os" {
   value = data.ics_operating_systems.example.operating_systems
+}
+
+# Filter for Ubuntu operating systems
+output "ubuntu_options" {
+  value = [
+    for os in data.ics_operating_systems.example.operating_systems :
+    os.name
+    if can(regex("Ubuntu", os.name))
+  ]
+}
+
+# Find the cheapest hourly operating system
+output "cheapest_hourly_os" {
+  value = try(
+    sort([
+      for os in data.ics_operating_systems.example.operating_systems :
+      {
+        name         = os.name
+        price_hourly = os.price_hourly
+      }
+      if os.hourly_enabled
+    ])[0],
+    null
+  )
 }
 ```
 
@@ -27,11 +51,12 @@ output "available_os" {
 
 ### Required
 
-- `location` (String) The location code
-- `server_type_name` (String) The server type name
+- `location` (String) Location code (e.g., 'NYC1', 'FRA1')
+- `server_type_name` (String) Server type name (e.g., 'c1.small')
 
 ### Read-Only
 
+- `id` (String) Data source identifier
 - `operating_systems` (List of Object) List of available operating systems (see [below for nested schema](#nestedatt--operating_systems))
 
 <a id="nestedatt--operating_systems"></a>
@@ -39,6 +64,9 @@ output "available_os" {
 
 Read-Only:
 
-- `hourly_enabled` (Boolean) Whether hourly billing is enabled for this OS
+- `hourly_enabled` (Boolean) Whether hourly billing is available
 - `name` (String) Operating system name
-- `product_code` (String) Product code for the operating system
+- `os_type` (String) Operating system type (e.g., 'linux', 'windows')
+- `price` (Number) Monthly price
+- `price_hourly` (Number) Hourly price
+- `product_code` (String) Product code used by the API
